@@ -1,0 +1,27 @@
+.buttons {
+    display: flex;
+    flex-direction: column; /* Arrange buttons vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: 100vh; /* Ensure full viewport height */
+    background: linear-gradient(to right, #a1dfe7, #195668); /* Gradient color */
+  }
+  
+  /* Style the buttons */
+  .button {
+    background-color: #ffffff; /* Button background color */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    color: #333; /* Text color */
+    font-size: 16px;
+    padding: 10px 20px; /* Button padding */
+    margin: 10px; /* Space between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+  }
+  
+  /* Button hover effect */
+  .button:hover {
+    background-color: #ddd; /* Lighter background color on hover */
+  }
+  
