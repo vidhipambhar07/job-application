@@ -1,0 +1,208 @@
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container-fluid">
+      <img
+        src="../assets/logo.png"
+        width="30"
+        height="30"
+        class="d-inline-block align-top"
+        alt=""
+      />
+      <a class="navbar-brand">Job Applications List</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto"></ul>
+        <form class="d-flex" (ngSubmit)="applySearch()">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            [(ngModel)]="searchText"
+            name="search"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+          
+          <button
+            class="btn btn-outline-success"
+            type="submit"
+            (click)="logout()"
+          >
+            Logout
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row mt-4" *ngIf="formData && formData.length > 0">
+    <div class="col">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of formDataFiltered; let i = index">
+            <td>{{ user.basicDetails.name }}</td>
+            <td>{{ user.basicDetails.email }}</td>
+            <td>{{ user.basicDetails.contact }}</td>
+            <td>
+              <button
+                class="btn btn-primary me-2"
+                (click)="openModal('view', i)"
+              >
+                More Details
+              </button>
+              <button class="btn btn-warning me-2" (click)="editApplication(i)">
+                Edit
+              </button>
+              <button class="btn btn-danger" (click)="deleteApplication(i)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    *ngIf="modalData"
+    class="modal fade show"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalTitle"
+    aria-hidden="true"
+  >
+  </div>
+  <!-- Modal for displaying detailed information -->
+  <div
+    *ngIf="modalData"
+    class="modal fade show"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Application Details</h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeModal()"                        
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="modalIndex !== undefined && formData[modalIndex]">
+            <h3>Basic Details</h3>
+            <div class="row">
+              <div class="col">
+                <p>
+                  <strong>Name:</strong>
+                  {{ formData[modalIndex].basicDetails.name }}
+                </p>
+                <p>
+                  <strong>Email:</strong>
+                  {{ formData[modalIndex].basicDetails.email }}
+                </p>
+                <p>
+                  <strong>Contact:</strong>
+                  {{ formData[modalIndex].basicDetails.contact }}
+                </p>
+              </div>
+            </div>
+
+            <h3>Education</h3>
+            <ul>
+              <li *ngFor="let edu of formData[modalIndex].education">
+                <p><strong>Board:</strong> {{ edu.board }}</p>
+                <p><strong>CGPA:</strong> {{ edu.cgpa }}</p>
+                <p><strong>Year:</strong> {{ edu.year }}</p>
+              </li>
+            </ul>
+
+            <h3>Languages</h3>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Language</th>
+                    <th>Read</th>
+                    <th>Write</th>
+                    <th>Speak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let lang of getLanguages(modalIndex)">
+                    <td>{{ lang.name }}</td>
+                    <td>{{ lang.read ? "Yes" : "No" }}</td>
+                    <td>{{ lang.write ? "Yes" : "No" }}</td>
+                    <td>{{ lang.speak ? "Yes" : "No" }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Technical Experience</h3>
+            <ul>
+              <li *ngFor="let tech of formData[modalIndex].technicalExperience">
+                <p><strong>Technology:</strong> {{ tech.technology }}</p>
+                <p><strong>Proficiency:</strong> {{ tech.proficiency }}</p>
+              </li>
+            </ul>
+
+            <h3>Preferences</h3>
+            <ul>
+              <li>
+                <p>
+                  <strong>Current CTC:</strong>
+                  {{ formData[modalIndex].preferences.currentCTC }} LPA
+                </p>
+                <p>
+                  <strong>Expected CTC:</strong>
+                  {{ formData[modalIndex].preferences.expectedCTC }} LPA
+                </p>
+                <p>
+                  <strong>Notice Period:</strong>
+                  {{ formData[modalIndex].preferences.noticePeriod }} Days
+                </p>
+                <p>
+                  <strong>Preferred Location:</strong>
+                  {{ formData[modalIndex].preferences.preferredLocation }}
+                </p>
+              </li>
+            </ul>
+
+            <h3>Work Experience</h3>
+            <ul>
+              <li *ngFor="let work of formData[modalIndex].workExperience">
+                <p><strong>Company:</strong> {{ work.company }}</p>
+                <p><strong>Designation:</strong> {{ work.designation }}</p>
+                <p><strong>From:</strong> {{ work.from }}</p>
+                <p><strong>To:</strong> {{ work.to }}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
